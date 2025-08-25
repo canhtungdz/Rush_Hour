@@ -4,7 +4,7 @@
 *.so
 
 # macOS system files
-# .DS_Store
+.DS_Store
 
 # Virtual environments
 venv/
