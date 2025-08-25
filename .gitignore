@@ -1,0 +1,25 @@
+# Byte-compiled / optimized / DLL files
+**/__pycache__/
+*.py[cod]
+*.so
+
+# macOS system files
+# .DS_Store
+
+# Virtual environments
+venv/
+env/
+ENV/
+*.egg-info/
+
+# PyInstaller build folders
+build/
+dist/
+*.spec
+
+# Logs and temporary files
+*.log
+*.tmp
+
+# IDE files
+.vscode/
