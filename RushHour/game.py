@@ -1,4 +1,4 @@
-import pygame, resource
+import pygame, resources
 import vehicle, vehicles, color, draw, event, level, custom, sound
 
 def main():
