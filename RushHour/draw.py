@@ -18,8 +18,16 @@ def next_game(game_current):
 
 def draw_vehicles(surface_game, game):
     unit_cell = int(surface_game.get_width()/game.size_game)
-    # surface_game.fill(color.colors["GREY"])
+    surface_game.fill(color.colors["GREY"])
     surface_game.blit(image_grid, (0,0))
+    
+    # Draw white background for exit (to make hint visible)
+    red_car = game.vehicles.get(1)
+    if red_car and red_car.versus > 0:
+        row = red_car.versus
+        col = game.size_game
+        exit_rect = pygame.Rect((col - 1) * unit_cell, (row - 1) * unit_cell, unit_cell, unit_cell)
+        pygame.draw.rect(surface_game, color.colors["GREY"], exit_rect)
     for i in range(1, game.len() + 1):
         if game.vehicles.get(i).versus > 0:
             draw_vehicle(surface_game,unit_cell, i,((game.vehicles.get(i).versus),game.vehicles.get(i).get_pos_last()), (game.vehicles.get(i).versus, game.vehicles.get(i).get_pos_last() + game.vehicles.get(i).size - 1))
@@ -43,8 +51,8 @@ def draw_game_main():
     if game.len() > 0:
         unit_cell = int(surface_game.get_width()/game.size_game)
         draw_vehicles(surface_game, game)
-        draw_hint(surface_game, game)
         draw_arrow(surface_game, unit_cell, (game.vehicles.get(1).versus, game.size_game), "RushHour/resources/image/arrow.png")
+        draw_hint(surface_game, game)
 
 def draw_hint(surface_game, game):
     solution = getattr(game, 'solution', None)
@@ -67,9 +75,23 @@ def draw_hint(surface_game, game):
         vehicle_rect = pygame.Rect(int((pos1[1] - 1) * unit_cell),int((pos1[0] - 1) * unit_cell),int((pos2[1] - pos1[1] + 1) * unit_cell),int((pos2[0] - pos1[0] + 1) * unit_cell))
         
         # Create a surface for alpha blending
-        s = pygame.Surface((vehicle_rect.width, vehicle_rect.height))
-        s.set_alpha(128)
-        s.fill(color.colors.get(vehicle_id))
+        # Create a surface for alpha blending
+        s = pygame.Surface((vehicle_rect.width, vehicle_rect.height), pygame.SRCALPHA)
+        
+        # Get color and add alpha
+        c = color.colors.get(vehicle_id)
+        # if c is None:
+        #     print(f"WARNING: Color not found for vehicle {vehicle_id}")
+        #     c = (0, 0, 0) # Default to black if not found
+        
+        # print(f"Drawing hint for vehicle {vehicle_id} with color {c}")
+        
+        if len(c) == 3:
+            c = (*c, 128)
+        else:
+            c = (c[0], c[1], c[2], 128)
+            
+        pygame.draw.rect(s, c, s.get_rect(), border_radius=25)
         surface_game.blit(s, (vehicle_rect.x, vehicle_rect.y))
         
     if getattr(game, 'calculating', False):

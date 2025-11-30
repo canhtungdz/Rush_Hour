@@ -33,6 +33,12 @@ def main():
 
         event.check_win()
         event.check_event()
+    
+    # DEBUG: Auto-solve once
+    # if event.game and not getattr(event.game, 'debug_solved', False):
+    #     print("DEBUG: Calling solve()")
+    #     event.game.solve()
+    #     event.game.debug_solved = True
 
         
 
