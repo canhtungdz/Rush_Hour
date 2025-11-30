@@ -20,6 +20,8 @@ def initial(screen_current, surface_game_current, surface_game_function_current,
     global screen, surface_game, surface_game_function, game,  game, custom_map_mode
     global rect_button_restart, rect_button_back, rect_button_solve, rect_button_next_level, rect_button_prev_level, rect_button_custom_map_mode
     game = game_initial
+    if getattr(game, 'reset_hints', None):
+        game.reset_hints()
     screen = screen_current
     surface_game = surface_game_current
     surface_game_function = surface_game_function_current
@@ -42,6 +44,8 @@ def next_game():
     if current_game > len(level.levels):
         current_game = 1
     game = level.levels.get(current_game)
+    if getattr(game, 'reset_hints', None):
+        game.reset_hints()
     if game.len() == 0:
         next_game()
     draw.next_game(game)
@@ -53,6 +57,8 @@ def prev_game():
     if current_game < 1:
         current_game = len(level.levels)
     game = level.levels.get(current_game)
+    if getattr(game, 'reset_hints', None):
+        game.reset_hints()
     draw.next_game(game)
     
 def turn_on_custom_map_mode():
@@ -101,8 +107,6 @@ def check_event_keyboard_game_main(surface_game, game, event):
         if admin_mode:
             if event.key == pygame.K_SLASH :
                 game.solve()
-            if event.key == pygame.K_PERIOD :
-                next_game()
             if event.key == pygame.K_COMMA :
                 prev_game()
 

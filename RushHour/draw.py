@@ -43,7 +43,43 @@ def draw_game_main():
     if game.len() > 0:
         unit_cell = int(surface_game.get_width()/game.size_game)
         draw_vehicles(surface_game, game)
+        draw_hint(surface_game, game)
         draw_arrow(surface_game, unit_cell, (game.vehicles.get(1).versus, game.size_game), "RushHour/resources/image/arrow.png")
+
+def draw_hint(surface_game, game):
+    solution = getattr(game, 'solution', None)
+    if solution:
+        vehicle_id, step = solution[0]
+        vehicle = game.vehicles.get(vehicle_id)
+        unit_cell = int(surface_game.get_width()/game.size_game)
+        
+        # Calculate new position
+        new_pos_last = vehicle.get_pos_last() + step
+        
+        if vehicle.versus > 0:
+            pos1 = (vehicle.versus, new_pos_last)
+            pos2 = (vehicle.versus, new_pos_last + vehicle.size - 1)
+        else:
+            pos1 = (new_pos_last, -vehicle.versus)
+            pos2 = (new_pos_last + vehicle.size - 1, -vehicle.versus)
+            
+        # Draw ghost
+        vehicle_rect = pygame.Rect(int((pos1[1] - 1) * unit_cell),int((pos1[0] - 1) * unit_cell),int((pos2[1] - pos1[1] + 1) * unit_cell),int((pos2[0] - pos1[0] + 1) * unit_cell))
+        
+        # Create a surface for alpha blending
+        s = pygame.Surface((vehicle_rect.width, vehicle_rect.height))
+        s.set_alpha(128)
+        s.fill(color.colors.get(vehicle_id))
+        surface_game.blit(s, (vehicle_rect.x, vehicle_rect.y))
+        
+    if getattr(game, 'calculating', False):
+        font = pygame.font.Font(None, 36)
+        text = font.render("Calculating...", True, color.colors.get("BLACK"))
+        surface_game.blit(text, (10, 10))
+        
+        # Optional: Draw an outline or arrow to make it clearer? 
+        # The ghost is good enough for now.
+
     
 
 def draw_current_vehicle(surface_game_function, currrent_vehicle):
