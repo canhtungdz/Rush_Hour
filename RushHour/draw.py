@@ -27,7 +27,8 @@ def draw_vehicles(surface_game, game):
         row = red_car.versus
         col = game.size_game
         exit_rect = pygame.Rect((col - 1) * unit_cell, (row - 1) * unit_cell, unit_cell, unit_cell)
-        pygame.draw.rect(surface_game, color.colors["GREY"], exit_rect)
+        exit_rect.inflate_ip(-20, -20)
+        pygame.draw.rect(surface_game, color.colors["GREY"], exit_rect, border_radius=10)
     for i in range(1, game.len() + 1):
         if game.vehicles.get(i).versus > 0:
             draw_vehicle(surface_game,unit_cell, i,((game.vehicles.get(i).versus),game.vehicles.get(i).get_pos_last()), (game.vehicles.get(i).versus, game.vehicles.get(i).get_pos_last() + game.vehicles.get(i).size - 1))
